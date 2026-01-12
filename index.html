@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Supabase를 활용한 책 검색 및 관리 서비스">
+    <title>📚 Book Search - Supabase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">📚 Book Search</h1>
+                <p class="tagline">Powered by Supabase</p>
+            </div>
+        </header>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="책 제목 또는 저자로 검색..."
+                        autocomplete="off"
+                    >
+                    <button id="clearSearch" class="clear-btn" style="display: none;">✕</button>
+                </div>
+                <button id="addBookBtn" class="add-btn">
+                    <span>+ 새 책 추가</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stat-item">
+                <span class="stat-number" id="totalBooks">0</span>
+                <span class="stat-label">전체 도서</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="searchResults">-</span>
+                <span class="stat-label">검색 결과</span>
+            </div>
+        </section>
+
+        <!-- Books Grid -->
+        <main class="books-section">
+            <div id="booksGrid" class="books-grid">
+                <!-- Books will be dynamically inserted here -->
+            </div>
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-icon">📖</div>
+                <h3>등록된 책이 없습니다</h3>
+                <p>새 책을 추가해 보세요!</p>
+            </div>
+            <div id="loadingState" class="loading-state">
+                <div class="spinner"></div>
+                <p>책을 불러오는 중...</p>
+            </div>
+            <div id="noResults" class="no-results" style="display: none;">
+                <div class="empty-icon">🔍</div>
+                <h3>검색 결과가 없습니다</h3>
+                <p>다른 검색어를 시도해 보세요</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Made with ❤️ using Supabase</p>
+        </footer>
+    </div>
+
+    <!-- Add/Edit Book Modal -->
+    <div id="bookModal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">새 책 추가</h2>
+                <button id="closeModal" class="close-btn">✕</button>
+            </div>
+            <form id="bookForm" class="book-form">
+                <input type="hidden" id="bookId">
+                
+                <div class="form-group">
+                    <label for="bookTitle">제목 <span class="required">*</span></label>
+                    <input type="text" id="bookTitle" required placeholder="책 제목을 입력하세요">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bookAuthor">저자 <span class="required">*</span></label>
+                    <input type="text" id="bookAuthor" required placeholder="저자명을 입력하세요">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bookIsbn">ISBN</label>
+                        <input type="text" id="bookIsbn" placeholder="ISBN">
+                    </div>
+                    <div class="form-group">
+                        <label for="bookYear">출판년도</label>
+                        <input type="number" id="bookYear" placeholder="2024" min="1000" max="2100">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bookPublisher">출판사</label>
+                    <input type="text" id="bookPublisher" placeholder="출판사명">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bookCover">표지 이미지 URL</label>
+                    <input type="url" id="bookCover" placeholder="https://...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bookDescription">설명</label>
+                    <textarea id="bookDescription" rows="3" placeholder="책에 대한 간단한 설명"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="deleteBookBtn" class="delete-btn" style="display: none;">삭제</button>
+                    <div class="form-actions-right">
+                        <button type="button" id="cancelBtn" class="cancel-btn">취소</button>
+                        <button type="submit" class="submit-btn">저장</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
